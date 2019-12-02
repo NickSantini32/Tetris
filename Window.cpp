@@ -41,6 +41,26 @@ void Window::drawText(std::string text)
 
 	TTF_Quit();
 }
+void Window::drawText(std::string text, int x, int y, int size){
+	TTF_Init();
+
+	_color = { 0, 0, 0 };
+	_font = TTF_OpenFont("arial.ttf", size);
+	SDL_Surface* _surface = TTF_RenderText_Solid(_font,
+		text.c_str(), _color);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, _surface);
+	int texW = 0;
+	int texH = 0;
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect rect = { x, y, texW, texH };
+	SDL_RenderCopy(_renderer, texture, NULL, &rect);
+
+	TTF_CloseFont(_font);
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(_surface);
+
+	TTF_Quit();
+}
 void Window::drawGrid(int grid[][10][4])
 {
 	int DIM = Shape::getDim();
@@ -68,8 +88,6 @@ void Window::drawShape(Shape shape, int grid[][10][4])
 	int* color = shape.getColor();
 	int DIM = Shape::getDim();
 
-	
-	
 	SDL_Rect rect[4];
 	for (int i = 0; i < 4; i++)
 	{
@@ -183,4 +201,12 @@ void Window::clear()
 void Window::present()
 {
 	SDL_RenderPresent(_renderer);
+}
+void Window::show(bool condition) {
+	if (condition) {
+		SDL_ShowWindow(_window);
+	}
+	else {
+		SDL_HideWindow(_window);
+	}
 }

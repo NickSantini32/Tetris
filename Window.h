@@ -1,3 +1,5 @@
+#ifndef WINDOW_H
+#define WINDOW_H
 #pragma once
 #include "SDL.h"
 #include "Shape.h"
@@ -26,7 +28,10 @@ public:
 	void drawShape(Shape shape, int grid[][10][4]);
 	void drawShape(Shape shape);
 	void drawText(std::string text);
+	void drawText(std::string text, int x, int y, int size);
 	void drawGrid(int grid[][10][4]);
 	void present();
+	void show(bool condition);
 };
 
+#endif

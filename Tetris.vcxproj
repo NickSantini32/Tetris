@@ -170,6 +170,7 @@
     <CopyFileToFolders Include="x64\Release\zlib1.dll">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+    <None Include="scores.dat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tetris.rc" />

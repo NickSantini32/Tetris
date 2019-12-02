@@ -4,13 +4,26 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
+#include "Window.h"
 #include <math.h> 
+
+using namespace std;
 
 Shape::Shape()
 {
 	nextShape = rand() % 7;
 	isDown = false;
 	randomizeShape();
+	savedShape = -1;
+	swappable = true;
+}
+Shape::Shape(int t){
+	nextShape = rand() % 7;
+	type = t;
+	isDown = false;
+	buildDisplayShape();
+	savedShape = -1;
+	swappable = true;
 }
 bool Shape::moveDown(int grid[][10][4])
 {
@@ -71,6 +84,7 @@ bool Shape::moveDown(int grid[][10][4])
 				}
 			}
 			randomizeShape();
+			swappable = true;
 			isDown = false;
 			return false;
 		}
@@ -87,7 +101,177 @@ bool Shape::moveDown(int grid[][10][4])
 		}
 	}
 	return true;
-};
+}
+void Shape::replaceShape(int t) {
+
+}
+void Shape::save(int grid[][10][4]){
+	if (swappable) {
+		if (savedShape == -1) {
+			savedShape = type;
+			randomizeShape();
+		}
+		else {
+			int tempType = type;
+			type = savedShape;
+			savedShape = tempType;
+			buildShape(false, X[0], Y[0], grid);
+		}
+	}	
+//	std::cout << "saved: " << savedShape << std::endl;
+//	std::cout << "current: " << type << std::endl;
+}
+Shape Shape::getSaved() {
+	Shape shape(savedShape);
+	return shape;
+}
+void Shape::buildDisplayShape() {
+	int base;
+	orientation = 0;
+	switch (type)
+	{
+	case 0: // Square
+	{
+		base = 250/2 - DIM;
+		color[0] = 240;
+		color[1] = 240;
+		color[2] = 0;
+
+		X[0] = base;
+		Y[0] = 220 / 2 - DIM/2;
+
+		X[1] = base + DIM;
+		Y[1] = 220 / 2 - DIM/2;
+
+		X[2] = base;
+		Y[2] = 220 / 2 + DIM/2;
+
+		X[3] = base + DIM;
+		Y[3] = 220 / 2 + DIM/2;
+		break;
+	}
+	case 1: // T block
+	{
+		base = 250 / 2 - DIM * 1.5;
+		color[0] = 160;
+		color[1] = 0;
+		color[2] = 240;
+
+		X[0] = base;
+		Y[0] = 220 / 2 - DIM / 2;
+
+		X[1] = base + DIM;
+		Y[1] = 220 / 2 - DIM / 2;
+
+		X[2] = base + DIM * 2;
+		Y[2] = 220 / 2 - DIM / 2;
+
+		X[3] = base + DIM;
+		Y[3] = 220 / 2 + DIM / 2;
+		break;
+	}
+	case 2: // Line
+	{
+		base = 250 / 2 - DIM * 0.5;
+		color[0] = 0;
+		color[1] = 240;
+		color[2] = 240;
+
+		X[0] = base;
+		Y[0] = 220 / 2 - DIM * 1.5;
+
+		X[1] = base;
+		Y[1] = 220 / 2 - DIM / 2;
+
+		X[2] = base;
+		Y[2] = 220 / 2 + DIM / 2;
+
+		X[3] = base;
+		Y[3] = 220 / 2 + DIM * 1.5;
+		break;
+	}
+	case 3: // Z
+	{
+		base = 250 / 2 - DIM * 1.5;
+		color[0] = 240;
+		color[1] = 0;
+		color[2] = 0;
+
+		X[0] = base;
+		Y[0] = 220 / 2 - DIM / 2;
+
+		X[1] = base + DIM;
+		Y[1] = 220 / 2 - DIM / 2;
+
+		X[2] = base + DIM;
+		Y[2] = 220 / 2 + DIM / 2;
+
+		X[3] = base + DIM * 2;
+		Y[3] = 220 / 2 + DIM / 2;
+		break;
+	}
+	case 4: // Backwards Z
+	{
+		base = 250 / 2 - DIM * 0.5;
+		color[0] = 0;
+		color[1] = 240;
+		color[2] = 0;
+
+		X[0] = base;
+		Y[0] = 220 / 2 + DIM / 2;
+
+		X[1] = base + DIM;
+		Y[1] = 220 / 2 + DIM / 2;
+
+		X[2] = base + DIM;
+		Y[2] = 220 / 2 - DIM / 2;
+
+		X[3] = base + DIM * 2;
+		Y[3] = 220 / 2 - DIM / 2;
+		break;
+	}
+	case 5: // L
+	{
+		base = 250 / 2 - DIM;
+		color[0] = 240;
+		color[1] = 160;
+		color[2] = 0;
+
+		X[0] = base;
+		Y[0] = 220 / 2 - DIM * 1.5;
+
+		X[1] = base;
+		Y[1] = 220 / 2 - DIM / 2;
+
+		X[2] = base;
+		Y[2] = 220 / 2 + DIM / 2;
+
+		X[3] = base + DIM;
+		Y[3] = 220 / 2 + DIM / 2;
+		break;
+	}
+	case 6: // Backwards L
+	{
+		base = 250 / 2 - DIM;
+		color[0] = 0;
+		color[1] = 0;
+		color[2] = 240;
+
+		X[0] = base + DIM;
+		Y[0] = 220 / 2 - DIM *1.5;
+
+		X[1] = base + DIM;
+		Y[1] = 220 / 2 - DIM / 2;
+
+		X[2] = base + DIM;
+		Y[2] = 220 / 2 + DIM /2;
+
+		X[3] = base;
+		Y[3] = 220 / 2 + DIM /2;
+		break;
+	}
+	}
+}
 void Shape::addSpeed()
 {
 	speedNum++;
@@ -108,8 +292,8 @@ void Shape::addSpeed()
 		simplNum /= 2;
 		simplDenom /= 2;
 	}
-	std::cout << speedNum << "/" << speedDenom << std::endl;
-	std::cout << simplNum << "/" << simplDenom << std::endl;
+	//std::cout << speedNum << "/" << speedDenom << std::endl;
+	//std::cout << simplNum << "/" << simplDenom << std::endl;
 }
 void Shape::moveRight(int grid[][10][4])
 {
@@ -430,10 +614,246 @@ void Shape::rotate(int grid[][10][4])
 			break;
 		}		
 	}
+	checkPos(tempOrientation, tempX, tempY, grid);
+}
+Shape Shape::getNext()
+{
+	Shape shape(nextShape);
+	return shape;
+}
+void Shape::randomizeShape()
+{
+	srand(time(NULL));
+	type = nextShape;
+	nextShape = rand() % 7;
+	buildShape(true, 0, 0, nullptr);	
+}
+void Shape::buildShape(bool isNew, int x, int y, int grid[][10][4])
+{
+	int baseX, baseY = 0;
+	int tempX[4], tempY[4], tempColor[3];
+	orientation = 0;
+	if (!isNew) {
+		for (int i = 0; i < 4; i++) {
+			tempX[i] = X[i];
+			tempY[i] = Y[i];
+			if (i < 3) {
+				tempColor[i] = color[i];
+			}
+		}
+	}
+	switch (type)
+	{
+		case 0: // Square
+		{
+			if (isNew)
+				baseX = (rand() % 9) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+						
+			color[0] = 240;
+			color[1] = 240;
+			color[2] = 0;
+
+			X[0] = baseX;
+			Y[0] = baseY;
+
+			X[1] = baseX + DIM;
+			Y[1] = baseY;
+
+			X[2] = baseX;
+			Y[2] = baseY + DIM;
+
+			X[3] = baseX + DIM;
+			Y[3] = baseY + DIM;
+			break;
+		}
+		case 1: // T block
+		{
+			if (isNew)
+				baseX = (rand() % 8) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			color[0] = 160;
+			color[1] = 0;
+			color[2] = 240;
+
+			X[0] = baseX;
+			Y[0] = baseY;
+
+			X[1] = baseX + DIM;
+			Y[1] = baseY;
+
+			X[2] = baseX + DIM * 2;
+			Y[2] = baseY;
+
+			X[3] = baseX + DIM;
+			Y[3] = baseY + DIM;
+			break;
+		}
+		case 2: // Line
+		{
+			if (isNew)
+				baseX = (rand() % 10) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			
+			color[0] = 0;
+			color[1] = 240;
+			color[2] = 240;
+
+			X[0] = baseX;
+			Y[0] = baseY;
+
+			X[1] = baseX;
+			Y[1] = baseY + DIM;
+
+			X[2] = baseX;
+			Y[2] = baseY + 2 * DIM;
+
+			X[3] = baseX;
+			Y[3] = baseY + 3 * DIM;
+			break;
+		}
+		case 3: // Z
+		{
+			if (isNew)
+				baseX = (rand() % 8) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			color[0] = 240;
+			color[1] = 0;
+			color[2] = 0;
+
+			X[0] = baseX;
+			Y[0] = baseY;
+
+			X[1] = baseX + DIM;
+			Y[1] = baseY;
+
+			X[2] = baseX + DIM;
+			Y[2] = baseY + DIM;
+
+			X[3] = baseX + DIM * 2;
+			Y[3] = baseY + DIM;
+			break;
+		}
+		case 4: // Backwards Z
+		{
+			if (isNew)
+				baseX = (rand() % 8) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			color[0] = 0;
+			color[1] = 240;
+			color[2] = 0;
+
+			X[0] = baseX;
+			Y[0] = baseY +DIM;
+
+			X[1] = baseX + DIM;
+			Y[1] = baseY + DIM;
+
+			X[2] = baseX + DIM;
+			Y[2] = baseY;
+
+			X[3] = baseX + DIM * 2;
+			Y[3] = baseY;
+			break;
+		}
+		case 5: // L
+		{
+			if (isNew)
+				baseX = (rand() % 9) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			color[0] = 240;
+			color[1] = 160;
+			color[2] = 0;
+
+			X[0] = baseX;
+			Y[0] = baseY;
+
+			X[1] = baseX;
+			Y[1] = baseY + DIM;
+
+			X[2] = baseX;
+			Y[2] = baseY + 2 * DIM;
+
+			X[3] = baseX + DIM;
+			Y[3] = baseY + 2 * DIM;
+			break;
+		}
+		case 6: // Backwards L
+		{
+			if (isNew)
+				baseX = (rand() % 9) * DIM;
+			else {
+				baseX = x;
+				baseY = y;
+			}
+			color[0] = 0;
+			color[1] = 0;
+			color[2] = 240;
+
+			X[0] = baseX + DIM;
+			Y[0] = baseY;
+
+			X[1] = baseX + DIM;
+			Y[1] = baseY + DIM;
+
+			X[2] = baseX + DIM;
+			Y[2] = baseY + 2 * DIM;
+
+			X[3] = baseX;
+			Y[3] = baseY + 2 * DIM;
+			break;
+		}
+	}
+	if (!isNew) {
+		if (type == 6 || savedShape == 6) {
+			for (int i = 0; i < 4; i++) {
+				X[i] -= DIM;
+			}
+		}
+		if (checkPos(orientation, tempX, tempY, grid)) {
+			swappable = false;
+
+		}
+		else {
+			swappable = true;
+			for (int i = 0; i < 3; i++) {
+				color[i] = tempColor[i];
+			}
+			int tempType = type;
+			type = savedShape;
+			savedShape = tempType;
+
+		}
+		/*for (int l = 0; l < 4; l++) //RESET
+		{
+			X[l] = tempX[l];
+			Y[l] = tempY[l];
+		}*/
+	}
+}
+bool Shape::checkPos(int tempOrientation, int tempX[], int tempY[], int grid[][10][4]) {
 	for (int i = 0; i < 4; i++) //(X[i] < 0 || grid[(int)Y[i] / DIM][(X[i] / DIM)] == 1 || X[i] > DIM * 9)
 	{
 		if (X[i] < 0) //IF TOO FAR LEFT
-		{	
+		{
 			for (int j = 0; j < 4; j++) //MOVE 1 RIGHT
 			{
 				X[j] += DIM;
@@ -448,10 +868,10 @@ void Shape::rotate(int grid[][10][4])
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					//std::cout << "could not rotate" << std::endl;
-					return;
+					std::cout << "could not rotate" << std::endl;
+					return false;
 				}
-			}						
+			}
 		}
 		else if (X[i] > DIM * 9) //IF TOO FAR RIGHT
 		{
@@ -469,8 +889,8 @@ void Shape::rotate(int grid[][10][4])
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					//std::cout << "could not rotate" << std::endl;
-					return;
+					std::cout << "could not rotate" << std::endl;
+					return false;
 				}
 			}
 		}
@@ -484,13 +904,18 @@ void Shape::rotate(int grid[][10][4])
 			{
 				if (X[j] < 0 || grid[(int)Y[j] / DIM][(X[j] / DIM)][0] == 1) //IF INTERSECTS WITH GRID OR TOO FAR LEFT
 				{
-					for (int k = 0; k < 4; k++) //MOVE 2 RIGHT
+					for (int l = 0; l < 4; l++) //RESET
 					{
-						X[k] += 2 * DIM;
+						X[l] = tempX[l];
+						Y[l] = tempY[l];
 					}
-					for (int k = 0; k < 4; k++) //MOVE 2 RIGHT
+					for (int k = 0; k < 4; k++) //MOVE 1 RIGHT
 					{
-						if (X[k] > DIM * 9 || grid[(int)Y[k] / DIM][(X[k] / DIM)][0] == 1) //IF INTERSECTS WITH GRID OR TOO FAR LEFT
+						X[k] += DIM;
+					}
+					for (int k = 0; k < 4; k++) 
+					{
+						if (X[k] > DIM * 9 || grid[(int)Y[k] / DIM][(X[k] / DIM)][0] == 1) //IF INTERSECTS WITH GRID OR TOO FAR RIGHT
 						{
 							for (int l = 0; l < 4; l++) //RESET
 							{
@@ -498,8 +923,8 @@ void Shape::rotate(int grid[][10][4])
 								Y[l] = tempY[l];
 							}
 							orientation = tempOrientation;
-							//std::cout << "could not rotate" << std::endl;
-							return;
+							std::cout << "could not rotate" << std::endl;
+							return false;
 						}
 					}
 				}
@@ -521,245 +946,18 @@ void Shape::rotate(int grid[][10][4])
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					//std::cout << "could not rotate" << std::endl;
-					return;
+					std::cout << "could not rotate" << std::endl;
+					return false;
 				}
-			}		
+			}
 		}
 	}
+	return true;
 }
-Shape Shape::getNext()
-{
-	Shape shape;
-
-	int temp;
-
-	shape.type = nextShape;
-	shape.buildShape();
-	temp = shape.X[0];
-
-	switch (nextShape)
-	{
-		case 0: //Square
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250/2 + DIM;
-				shape.Y[i] += 220/2 - DIM;
-			}
-			break;
-		}
-		case 1: //T
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2 + 1.5 * DIM;
-				shape.Y[i] += 220 / 2 - DIM;
-			}
-			break;
-		}
-		case 2: //Line
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2 + 0.5 * DIM;
-				shape.Y[i] += 230 / 2 - 2 * DIM;
-			}
-			break;
-		}
-		case 3: //Z
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2 + 1.5 * DIM;
-				shape.Y[i] += 220 / 2 - DIM;
-			}
-			break;
-		}
-		case 4: //Backwards Z
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2 + 1.5 * DIM;
-				shape.Y[i] += 220 / 2 - DIM;
-			}
-			break;
-		}
-		case 5: //L
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2 + DIM;
-				shape.Y[i] += 220 / 2 - 1.5 * DIM;
-			}
-			break;
-		}
-		case 6: //Backwards L
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				shape.X[i] -= temp - 250 / 2;
-				shape.Y[i] += 220 / 2 - 1.5 * DIM;
-			}
-			break;
-		}
-	}
-
-	return shape;
-}
-void Shape::randomizeShape()
-{
-	srand(time(NULL));
-	type = nextShape;
+void Shape::reset() {
 	nextShape = rand() % 7;
-	buildShape();	
+	isDown = false;
+	randomizeShape();
+	savedShape = -1;
+	swappable = true;
 }
-void Shape::buildShape()
-{
-	int base;
-	orientation = 0;
-	switch (type)
-	{
-		case 0: // Square
-		{
-			base = (rand() % 9) * DIM;
-			color[0] = 240;
-			color[1] = 240;
-			color[2] = 0;
-
-			X[0] = base;
-			Y[0] = 0;
-
-			X[1] = base + DIM;
-			Y[1] = 0;
-
-			X[2] = base;
-			Y[2] = DIM;
-
-			X[3] = base + DIM;
-			Y[3] = DIM;
-			break;
-		}
-		case 1: // T block
-		{
-			base = (rand() % 8) * DIM;
-			color[0] = 160;
-			color[1] = 0;
-			color[2] = 240;
-
-			X[0] = base;
-			Y[0] = 0;
-
-			X[1] = base + DIM;
-			Y[1] = 0;
-
-			X[2] = base + DIM * 2;
-			Y[2] = 0;
-
-			X[3] = base + DIM;
-			Y[3] = DIM;
-			break;
-		}
-		case 2: // Line
-		{
-			base = (rand() % 10) * DIM;
-			color[0] = 0;
-			color[1] = 240;
-			color[2] = 240;
-
-			X[0] = base;
-			Y[0] = 0;
-
-			X[1] = base;
-			Y[1] = 1 * DIM;
-
-			X[2] = base;
-			Y[2] = 2 * DIM;
-
-			X[3] = base;
-			Y[3] = 3 * DIM;
-			break;
-		}
-		case 3: // Z
-		{
-			base = (rand() % 8) * DIM;
-			color[0] = 240;
-			color[1] = 0;
-			color[2] = 0;
-
-			X[0] = base;
-			Y[0] = 0;
-
-			X[1] = base + DIM;
-			Y[1] = 0;
-
-			X[2] = base + DIM;
-			Y[2] = DIM;
-
-			X[3] = base + DIM * 2;
-			Y[3] = DIM;
-			break;
-		}
-		case 4: // Backwards Z
-		{
-			base = (rand() % 8) * DIM;
-			color[0] = 0;
-			color[1] = 240;
-			color[2] = 0;
-
-			X[0] = base;
-			Y[0] = DIM;
-
-			X[1] = base + DIM;
-			Y[1] = DIM;
-
-			X[2] = base + DIM;
-			Y[2] = 0;
-
-			X[3] = base + DIM * 2;
-			Y[3] = 0;
-			break;
-		}
-		case 5: // L
-		{
-			base = (rand() % 9) * DIM;
-			color[0] = 240;
-			color[1] = 160;
-			color[2] = 0;
-
-			X[0] = base;
-			Y[0] = 0;
-
-			X[1] = base;
-			Y[1] = 1 * DIM;
-
-			X[2] = base;
-			Y[2] = 2 * DIM;
-
-			X[3] = base + DIM;
-			Y[3] = 2 * DIM;
-			break;
-		}
-		case 6: // Backwards L
-		{
-			base = (rand() % 9) * DIM;
-			color[0] = 0;
-			color[1] = 0;
-			color[2] = 240;
-
-			X[0] = base + DIM;
-			Y[0] = 0;
-
-			X[1] = base + DIM;
-			Y[1] = 1 * DIM;
-
-			X[2] = base + DIM;
-			Y[2] = 2 * DIM;
-
-			X[3] = base;
-			Y[3] = 2 * DIM;
-			break;
-		}
-	}
-}
-
