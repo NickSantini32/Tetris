@@ -6,8 +6,7 @@
 
 class Shape
 {
-//private:	
-public:
+private:	
 	static const int DIM = 40;
 
 	int speedNum = 2;
