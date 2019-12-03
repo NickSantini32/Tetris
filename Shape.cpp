@@ -2,7 +2,7 @@
 #include "SDL.h"
 #include <ctime>
 #include <cstdlib>
-#include <iostream>
+//#include <iostream>
 #include <chrono>
 #include "Window.h"
 #include <math.h> 
@@ -868,7 +868,7 @@ bool Shape::checkPos(int tempOrientation, int tempX[], int tempY[], int grid[][1
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					std::cout << "could not rotate" << std::endl;
+					//std::cout << "could not rotate" << std::endl;
 					return false;
 				}
 			}
@@ -889,7 +889,7 @@ bool Shape::checkPos(int tempOrientation, int tempX[], int tempY[], int grid[][1
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					std::cout << "could not rotate" << std::endl;
+					//std::cout << "could not rotate" << std::endl;
 					return false;
 				}
 			}
@@ -923,7 +923,7 @@ bool Shape::checkPos(int tempOrientation, int tempX[], int tempY[], int grid[][1
 								Y[l] = tempY[l];
 							}
 							orientation = tempOrientation;
-							std::cout << "could not rotate" << std::endl;
+							//std::cout << "could not rotate" << std::endl;
 							return false;
 						}
 					}
@@ -946,7 +946,7 @@ bool Shape::checkPos(int tempOrientation, int tempX[], int tempY[], int grid[][1
 						Y[l] = tempY[l];
 					}
 					orientation = tempOrientation;
-					std::cout << "could not rotate" << std::endl;
+					//std::cout << "could not rotate" << std::endl;
 					return false;
 				}
 			}

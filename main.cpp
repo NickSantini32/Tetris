@@ -1,4 +1,4 @@
-﻿#include <iostream>
+﻿//#include <iostream>
 #include "Window.h"
 #include "SDL.h"
 #include "Shape.h"
@@ -184,11 +184,11 @@ int main(int argc, char** argv)
 			}
 			inFS.close();
 
-			cout << "Vector after load: ";
+			/*cout << "Vector after load: ";
 			for (int j = 0; j < highscores.size(); j++) {
 				cout << highscores.at(j).name << " ";
 			}
-			cout << endl;
+			cout << endl;*/
 
 			endScreen.show(true);
 			for (int i = 0; i < highscores.size() && i < 5 || highscores.size() == 0; i++) {
